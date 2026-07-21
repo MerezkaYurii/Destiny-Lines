@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+--font-sans: var(--font-roboto), sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Наш кастомный normalize / reset */
+@layer base {
+  *, ::before, ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+/* Жестко прописываем Roboto для всех тегов, чтобы перебить остатки Arial */
+  html, body, p, h1, h2, h3, h4, h5, h6, span, a, button, input, textarea {
+    font-family: var(--font-roboto), sans-serif !important;
+  }
+  body {
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button {cursor: pointer}
+  .pdf-export-mode {
+  --color-text-main: #000000 !important; /* Черный для PDF */
+ }
+}
