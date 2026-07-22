@@ -15,14 +15,13 @@ export default function RulesModal({ dict }: { dict: Dictionary }) {
     <AnimatePresence>
       <div
         onClick={() => setIsOpen(false)}
-        className="fixed inset-0 top-[70px] z-20 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs"
-      >
+className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto"      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl bg-slate-950/60 border border-slate-700 p-6 rounded-2xl shadow-2xl text-white"
+          className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-slate-950/60 border border-slate-700 p-6 rounded-2xl shadow-2xl text-white"
         >
           <button
             onClick={() => setIsOpen(false)}
