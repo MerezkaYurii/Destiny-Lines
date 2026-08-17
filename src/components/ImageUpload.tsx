@@ -50,7 +50,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   );
   const handleUpload = async () => {
     if (!uploads.leftHand && !uploads.rightHand) return;
-    setIsSubmitted(true);
+
     // Собираем массив существующих файлов
     const filesToSave: UploadedFile[] = [];
     if (uploads.leftHand) {
@@ -72,8 +72,14 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     // Записываем в стор
     setUploadedFiles(filesToSave);
 
-    setLoading(true);
+    if (filesToSave.length < 2) {
+      alert(
+        'Images of both hands are required / Необходимы оба изображения рук',
+      );
+      return;
+    }
 
+    setLoading(true);
     const formData = new FormData();
     if (uploads.leftHand) formData.append('leftHand', uploads.leftHand.file);
     if (uploads.rightHand) formData.append('rightHand', uploads.rightHand.file);
@@ -166,7 +172,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       <button
         onClick={handleUpload}
         disabled={loading || isSubmitted}
-        className="w-1/2 py-2 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all"
+        className="w-1/2 py-2 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? dict.ImageUpload.text1 : dict.ImageUpload.text2}
       </button>
@@ -188,16 +194,16 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
           {/* Секция продажи полного разбора */}
           <div className="p-4 bg-gray-700 rounded-lg text-center">
             <h3 className="text-lg font-light text-white  underline mb-2">
-              {dict.analysisResult.full_analysis}
+              {dict.ResultDisplayChiromancy.full_analysis}
             </h3>
             <p className="text-sm text-white mb-4 font-light">
-              {dict.analysisResult.full_analysis_text}
+              {dict.ResultDisplayChiromancy.full_analysis_text}
             </p>
             <button
               onClick={handleProClick}
               className="px-6 py-3 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all "
             >
-              {dict.analysisResult.full_analysis_button}
+              {dict.ResultDisplayChiromancy.full_analysis_button}
             </button>
           </div>
         </div>

@@ -94,23 +94,23 @@
 
   "ResultDisplayNumerology": {
     "title": "Your express analysis:",
-    "full_analysis": "Full analysis: ",
+    "full_analysis": "Deep numerology analysis for $9.90: ",
     "full_analysis_text": "You will receive a complete numerological analysis: calculation of the life matrix, analysis of life cycles, hidden talents, strengths of character and personal recommendations.",
-    "full_analysis_button": "Get full analysis"
+    "full_analysis_button": "Get Deep numerology analysis for $9.90"
   },
 
   "ResultDisplayChiromancy": {
     "title": "Your express analysis:",
-    "full_analysis": "Full analysis: ",
+    "full_analysis": "Deep palm analysis for $9.90: ",
     "full_analysis_text": "You will receive a deep palm analysis: detailed psychological portrait, life trends, strengths, hidden potential and personal recommendations.",
-    "full_analysis_button": "Get full analysis"
+    "full_analysis_button": "Get Deep palm analysis for $9.90"
   },
 
   "ResultDisplayTarot": {
     "title": "Your express analysis:",
-    "full_analysis": "Full interpretation: ",
-    "full_analysis_text": "You will receive a detailed Tarot spread analysis: interpretation of the cards, analysis of hidden processes, trends in the development of the situation and practical recommendations.",
-    "full_analysis_button": "Get full analysis"
+    "full_analysis": "Detailed Tarot reading for $9.90: ",
+    "full_analysis_text": "You will receive a detailed Tarot reading: interpretation of the cards, analysis of hidden processes, trends in the development of the situation and practical recommendations.",
+    "full_analysis_button": "Get Detailed Tarot reading for $9.90"
   },
   "Tarot": {
     "title": "Ancient Tarot symbols — a mirror of your soul. Uncover the secrets of your future.",

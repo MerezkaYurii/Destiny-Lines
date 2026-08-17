@@ -7,9 +7,12 @@ import { useEffect, useState } from 'react';
 import { DECK } from '@/app/types/tarot';
 import { exportElementToPdf } from '@/app/utils/exportPdf';
 import GlobalLoader from './GlobalLoader';
-interface AiResponse {
+
+interface AiResponseItem {
   output: string;
 }
+
+type AiResponse = AiResponseItem | AiResponseItem[];
 
 export default function TarotContentFullResult({
   dict,
@@ -19,23 +22,23 @@ export default function TarotContentFullResult({
   lang: string;
 }) {
   const { tarotData } = useTarotStore();
-  const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(
-    dict.NumerologyContentFullResult.readyToSend,
+
+  // Начальное состояние зависит от наличия данных
+  const [loading, setLoading] = useState<boolean>(!!tarotData);
+  const [status, setStatus] = useState<string>(
+    dict.TarotContentFullResult.dataSending,
   );
   const [resultAI, setResultAI] = useState<AiResponse | null>(null);
 
   useEffect(() => {
-    const runNumerologyFullResult = async () => {
-      if (!tarotData) return;
+    if (!tarotData) {
+      return;
+    }
 
-      // const formData = new FormData();
-      // formData.append('question', tarotData.question);
-      // formData.append('lang', tarotData.lang);
-      // formData.append('cards', JSON.stringify(tarotData.cards));
+    let isCancelled = false;
+
+    const runTarotFullResult = async () => {
       try {
-        setLoading(true);
-        setStatus(dict.TarotContentFullResult.dataSending);
         const response = await fetch('/api/tarot-full-result', {
           method: 'POST',
           headers: {
@@ -52,19 +55,25 @@ export default function TarotContentFullResult({
 
         const result = await response.json();
 
-        setResultAI(result);
-        setStatus(dict.TarotContentFullResult.ready);
+        if (!isCancelled) {
+          setResultAI(result);
+          setStatus(dict.TarotContentFullResult.ready);
+        }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
-    runNumerologyFullResult();
+    runTarotFullResult();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tarotData, lang]);
+    return () => {
+      isCancelled = true;
+    };
+  }, [tarotData, lang, dict]);
 
   if (!tarotData) {
     return (
@@ -78,24 +87,37 @@ export default function TarotContentFullResult({
     exportElementToPdf('pdf-container', 'tarot-full-report.pdf');
   };
 
+  // Извлечение output из объекта или массива
+  const getAiText = (): string => {
+    if (!resultAI) return 'AI response not found...';
+    if (Array.isArray(resultAI)) {
+      return resultAI[0]?.output || 'AI response not found...';
+    }
+    return resultAI.output || 'AI response not found...';
+  };
+
   return (
-    <section className=" px-2 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6 w-full ">
+    <section className="px-2 py-2 sm:px-4 sm:py-4 lg:px-6 lg:py-6 w-full">
       {loading && <GlobalLoader />}
-      <div className="flex justify-center">
-        <button
-          onClick={handleDownload}
-          className="  w-3/4 bg-[#0f3995]  hover:bg-[#0f3995]/60 text-white font-light rounded-full shadow-sm hover:shadow-white transition-all py-3 mt-8 "
-        >
-          {dict.TarotContentFullResult.button}
-        </button>
-      </div>
+
+      {!loading && resultAI && (
+        <div className="flex justify-center">
+          <button
+            onClick={handleDownload}
+            className="w-3/4 bg-[#0f3995] hover:bg-[#0f3995]/60 text-white font-light rounded-full shadow-sm hover:shadow-white transition-all py-3 mt-8"
+          >
+            {dict.TarotContentFullResult.button}
+          </button>
+        </div>
+      )}
+
       <div
         id="pdf-container"
-        className="  container mx-auto bg-gray-900/60  w-full overflow-hidden rounded-2xl relative  shadow-lg"
+        className="container mx-auto bg-gray-900/60 w-full overflow-hidden rounded-2xl relative shadow-lg"
       >
         {/* Заголовок секции */}
         <div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl  italic  underline font-light text-left pl-10 text-white  ">
+          <h2 className="text-lg sm:text-xl lg:text-2xl italic underline font-light text-left pl-10 text-white">
             {dict.TarotContentFullResult.title}
           </h2>
           <div className="mt-2 ml-10 h-1 w-16 bg-[#0f3995] rounded" />
@@ -114,8 +136,7 @@ export default function TarotContentFullResult({
               {dict.TarotContentFullResult.cards}
             </p>
 
-            {/* Контейнер для картинок (flexbox для горизонтального ряда) */}
-            <div className=" flex flex-wrap gap-6 justify-center">
+            <div className="flex flex-wrap gap-6 justify-center">
               {tarotData.cards.map((cardName, index) => {
                 const cardData = DECK.find((c) => c.name === cardName);
 
@@ -133,7 +154,6 @@ export default function TarotContentFullResult({
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-700 flex items-center justify-center text-xs text-white">
-                        {' '}
                         ?
                       </div>
                     )}
@@ -145,33 +165,33 @@ export default function TarotContentFullResult({
         </div>
 
         {loading ? (
-          <div className="pl-10 pr-10 ">
+          <div className="pl-10 pr-10 pb-8">
             <p className="text-white font-light text-sm">{status}</p>
           </div>
         ) : (
           resultAI && (
-            <div className="pl-10 pr-10 text-white font-light  leading-relaxed whitespace-pre-line">
+            <div className="pl-10 pr-10 text-white font-light leading-relaxed whitespace-pre-line pb-8">
               <h3 className="text-lg font-light mb-2">
                 {dict.TarotContentFullResult.analysis}
               </h3>
               <div className="whitespace-pre-line text-base font-light leading-relaxed text-white">
-                {/* Обращаемся к [0] элементу массива */}
-                {resultAI && Array.isArray(resultAI) && resultAI.length > 0
-                  ? resultAI[0].output
-                  : 'AI response not found...'}
+                {getAiText()}
               </div>
             </div>
           )
         )}
       </div>
-      <div className="flex justify-center">
-        <button
-          onClick={handleDownload}
-          className="  w-3/4 bg-[#0f3995]  hover:bg-[#0f3995]/60 text-white font-light rounded-full shadow-sm hover:shadow-white transition-all py-3 mt-8 "
-        >
-          {dict.TarotContentFullResult.button}
-        </button>
-      </div>
+
+      {!loading && resultAI && (
+        <div className="flex justify-center">
+          <button
+            onClick={handleDownload}
+            className="w-3/4 bg-[#0f3995] hover:bg-[#0f3995]/60 text-white font-light rounded-full shadow-sm hover:shadow-white transition-all py-3 mt-8"
+          >
+            {dict.TarotContentFullResult.button}
+          </button>
+        </div>
+      )}
     </section>
   );
 }

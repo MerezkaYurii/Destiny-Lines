@@ -109,25 +109,24 @@ export default function ChiromancyContentFullResult({
             </div>
           ))}
         </div>
-      </div>
 
-      {loading ? (
-        <div className="pl-10 pr-10 ">
-          <p className="text-white font-light text-sm">{status}</p>
-        </div>
-      ) : (
-        resultAI && (
-          <div className="pl-10 pr-10 text-white leading-relaxed whitespace-pre-line">
-            <h3 className="text-lg font-light mb-2">
-              {dict.ChiromancyContentFullResult.analysis}
-            </h3>
-            <div className="whitespace-pre-line text-base font-light leading-relaxed text-white">
-              {resultAI?.output || 'AI response not found...'}
-            </div>
+        {loading ? (
+          <div className="pl-10 pr-10 ">
+            <p className="text-white font-light text-sm">{status}</p>
           </div>
-        )
-      )}
-
+        ) : (
+          resultAI && (
+            <div className="pl-10 pr-10 text-white leading-relaxed whitespace-pre-line">
+              <h3 className="text-lg font-light mb-2">
+                {dict.ChiromancyContentFullResult.analysis}
+              </h3>
+              <div className="whitespace-pre-line text-base font-light leading-relaxed text-white">
+                {resultAI?.output || 'AI response not found...'}
+              </div>
+            </div>
+          )
+        )}
+      </div>
       <div className="flex justify-center">
         <button
           onClick={handleDownload}
