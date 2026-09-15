@@ -7,9 +7,12 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
+    // const webhookUrl = isProduction
+    //   ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesChiromancy'
+    //   : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesChiromancy';
     const webhookUrl = isProduction
-      ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesChiromancy'
-      : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesChiromancy';
+      ? 'http://169.58.214.84:5678/webhook/DestinyLinesChiromancy'
+      : 'http://169.58.214.84:5678/webhook-test/DestinyLinesChiromancy';
 
     const response = await fetch(webhookUrl, {
       method: 'POST',

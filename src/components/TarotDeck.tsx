@@ -114,7 +114,7 @@ export default function TarotDeck({ onResult, onDraw, lang }: TarotDeckProps) {
   return (
     <div className="relative overflow-hidden flex flex-col items-center justify-center min-h-[400px] mt-10 p-6 gap-8 bg-slate-900/70 rounded-2xl border border-slate-700">
       {/* ЗАДНИЙ ФОН — теперь под кнопкой */}
-      {loading && <GlobalLoader />}
+
       <div className="absolute inset-0 z-0 pointer-events-none ">
         <Image
           src="/deckOfCards.png"
@@ -193,9 +193,12 @@ export default function TarotDeck({ onResult, onDraw, lang }: TarotDeckProps) {
           </motion.div>
         ))}
       </div>
+      {loading && (
+        <div className="flex items-center gap-2 z-50 justify-center ">
+          <span className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
+          <span className="text-white"> Loading...</span>
+        </div>
+      )}
     </div>
   );
 }
-
-//bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/80
-//bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all

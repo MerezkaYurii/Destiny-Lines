@@ -1,8 +1,11 @@
 'use client';
 
 import { useDictionary } from '@/app/hooks/useDictionary';
+
 import { NumerologyReport } from '@/app/types/numerology';
+
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface ResultProps {
   report: NumerologyReport | null;
@@ -11,16 +14,12 @@ interface ResultProps {
 
 export default function ResultDisplay({ report, lang }: ResultProps) {
   const dict = useDictionary();
-
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   if (!report) return null;
   const aiResponse =
     report.text || report.output || report.analysis || report.response || '';
-
-  const handleProClick = () => {
-    router.push(`/${lang}/numerologyFullResult`);
-  };
 
   if (!dict) return null;
   return (
@@ -43,10 +42,23 @@ export default function ResultDisplay({ report, lang }: ResultProps) {
             {dict.ResultDisplayNumerology.full_analysis_text}
           </p>
           <button
-            onClick={handleProClick}
+            disabled={loading}
+            // onClick={() =>
+            //   handleCheckout(
+            //     getEnvVar('NEXT_PUBLIC_STRIPE_PRICE_NUMEROLOGY'),
+            //     lang,
+            //     'numerologyFullResult',
+            //     setLoading,
+            //   )
+            // }
+            onClick={() => {
+              router.push(`/${lang}/numerologyFullResult`);
+            }}
             className="px-6 py-3 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white"
           >
-            {dict.ResultDisplayNumerology.full_analysis_button}
+            {loading
+              ? 'Loading...'
+              : dict.ResultDisplayNumerology.full_analysis_button}
           </button>
         </div>
       </div>

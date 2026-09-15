@@ -19,21 +19,29 @@ export default function NumerologyContentFullResult({
 }) {
   const { clientData } = useNumerologyStore();
 
-  // Инициализируем сразу в true, если есть данные клиента
-  const [loading, setLoading] = useState<boolean>(!!clientData);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<string>(
     dict.NumerologyContentFullResult.dataSending,
   );
   const [resultAI, setResultAI] = useState<AiResponse | null>(null);
 
   useEffect(() => {
-    if (!clientData) {
+    queueMicrotask(() => {
+      setIsHydrated(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isHydrated || !clientData) {
       return;
     }
 
     let isCancelled = false;
 
     const runNumerologyFullResult = async () => {
+      setLoading(true);
+
       const formData = new FormData();
       formData.append('fullName', clientData.name);
       formData.append('birthDate', clientData.birthDate);
@@ -45,7 +53,7 @@ export default function NumerologyContentFullResult({
           body: formData,
         });
 
-        if (!response.ok) throw new Error('Ошибка сервера');
+        if (!response.ok) throw new Error('Error server');
 
         const result = await response.json();
 
@@ -67,8 +75,14 @@ export default function NumerologyContentFullResult({
     return () => {
       isCancelled = true;
     };
-  }, [clientData, lang, dict]);
+  }, [clientData, lang, dict, isHydrated]);
 
+  // 1. Пока гидратация не завершена — показываем лоадер
+  if (!isHydrated) {
+    return <GlobalLoader />;
+  }
+
+  // 2. Только ПОСЛЕ гидратации проверяем наличие clientData
   if (!clientData) {
     return (
       <div className="text-white p-10">

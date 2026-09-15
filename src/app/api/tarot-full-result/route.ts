@@ -6,9 +6,13 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    // const webhookUrl = isProduction
+    //   ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesTarotFullResult'
+    //   : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesTarotFullResult';
+
     const webhookUrl = isProduction
-      ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesTarotFullResult'
-      : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesTarotFullResult';
+      ? 'http://169.58.214.84:5678/webhook/DestinyLinesTarotFullResult'
+      : 'http://169.58.214.84:5678/webhook-test/DestinyLinesTarotFullResult';
 
     const response = await fetch(webhookUrl, {
       method: 'POST',

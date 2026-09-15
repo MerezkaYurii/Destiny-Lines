@@ -1,33 +1,21 @@
-// import { NextResponse } from 'next/server';
-// import { generateFullReport } from '@/app/utils/numerology';
 
-// export async function POST(request: Request) {
-//   try {
-//     const { birthDate } = await request.json();
 
-//     if (!birthDate) {
-//       return NextResponse.json({ error: 'Дата обязательна' }, { status: 400 });
-//     }
-
-//     const report = generateFullReport(birthDate);
-//     return NextResponse.json(report);
-//   } catch (error) {
-//     console.error('Numerology API Error:', error);
-//     return NextResponse.json({ error: 'Ошибка расчетов' }, { status: 500 });
-//   }
-// }
 import { NextRequest, NextResponse } from 'next/server';
 
-// Определение продакшена по переменной окружения Node.js
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
+    // const webhookUrl = isProduction
+    //   ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesNumerologyFullResult'
+    //   : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesNumerologyFullResult';
+
     const webhookUrl = isProduction
-      ? 'https://n8n-production-9f7d.up.railway.app/webhook/DestinyLinesNumerologyFullResult'
-      : 'https://n8n-production-9f7d.up.railway.app/webhook-test/DestinyLinesNumerologyFullResult';
+      ? 'http://169.58.214.84:5678/webhook/DestinyLinesNumerologyFullResult'
+      : 'http://169.58.214.84:5678/webhook-test/DestinyLinesNumerologyFullResult';
 
     const response = await fetch(webhookUrl, {
       method: 'POST',

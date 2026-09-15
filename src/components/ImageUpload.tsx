@@ -13,6 +13,8 @@ import {
 import { useRouter } from 'next/navigation';
 import GlobalLoader from './GlobalLoader';
 
+import { fileToBase64 } from '@/app/utils/fileHelpers';
+
 export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   const { setUploadedFiles } = useChiromancyStore();
   const dict = useDictionary();
@@ -23,6 +25,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
     type: keyof Uploads,
@@ -45,9 +48,11 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       }));
     }
   };
+
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
     null,
   );
+
   const handleUpload = async () => {
     if (!uploads.leftHand && !uploads.rightHand) return;
 
@@ -112,30 +117,75 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     setUploads((prev) => ({ ...prev, [type]: null }));
   };
 
-  const handleProClick = () => {
-    const filesArray = Object.entries(uploads)
-      .filter(([_, data]) => data !== null)
-      .map(([type, data]) => ({
-        type,
-        preview: data!.preview,
-        file: data!.file, // Теперь сохраняем файл для отправки
-      }));
+  // const handleProClick = async () => {
+  //   if (!uploads.leftHand || !uploads.rightHand) {
+  //     alert('Необходимы изображения обеих рук');
+  //     return;
+  //   }
 
-    setUploadedFiles(filesArray);
-    router.push(`/${currentLocale}/chiromancyFullResult`);
+  //   setLoading(true);
+
+  //   try {
+  //     const leftBase64 = await fileToBase64(uploads.leftHand.file);
+  //     const rightBase64 = await fileToBase64(uploads.rightHand.file);
+
+  //     localStorage.setItem('chiromancy_left_hand', leftBase64);
+  //     localStorage.setItem('chiromancy_right_hand', rightBase64);
+
+  //     const priceId = getEnvVar('NEXT_PUBLIC_STRIPE_PRICE_CHIROMANCY');
+
+  //     if (!priceId) {
+  //       console.error('Stripe Price ID for Chiromancy is missing');
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     await handleCheckout(
+  //       priceId,
+  //       currentLocale,
+  //       'chiromancyFullResult',
+  //       setLoading,
+  //     );
+  //   } catch (error) {
+  //     console.error('Ошибка подготовки изображений:', error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  const handleProClick = async () => {
+    if (!uploads.leftHand || !uploads.rightHand) {
+      alert('Необходимы изображения обеих рук');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const leftBase64 = await fileToBase64(uploads.leftHand.file);
+      const rightBase64 = await fileToBase64(uploads.rightHand.file);
+
+      localStorage.setItem('chiromancy_left_hand', leftBase64);
+      localStorage.setItem('chiromancy_right_hand', rightBase64);
+
+      router.push(`/${currentLocale}/chiromancyFullResult`);
+    } catch (error) {
+      console.error('Ошибка подготовки изображений:', error);
+      setLoading(false);
+    }
   };
 
   if (!dict) return null;
+
   return (
-    <div className="flex flex-row flex-wrap gap-4 w-full items-center justify-center  p-4 pt-10">
+    <div className="flex flex-row flex-wrap gap-4 w-full items-center justify-center p-4 pt-10">
       {loading && <GlobalLoader />}
       {(Object.keys(uploads) as (keyof Uploads)[]).map((type) => (
         <div
           key={type}
-          className="border-2 border-dashed border-gray-300  rounded-lg w-80 h-60 flex flex-row items-center justify-center"
+          className="border-2 border-dashed border-gray-300 rounded-lg w-80 h-60 flex flex-row items-center justify-center"
         >
           {!uploads[type] ? (
-            <label className="flex items-center justify-center cursor-pointer h-20  ">
+            <label className="flex items-center justify-center cursor-pointer h-20">
               <Plus className="text-white" />
               <span className="text-white text-sm font-light">
                 {type === 'leftHand'
@@ -176,6 +226,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       >
         {loading ? dict.ImageUpload.text1 : dict.ImageUpload.text2}
       </button>
+
       {/* Блок бесплатного отчета — показываем, если данные пришли */}
       {analysisResult && (
         <div className="mt-8 p-6 bg-gray-900 rounded-xl shadow-md border-2 border-gray-500">
@@ -193,7 +244,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
 
           {/* Секция продажи полного разбора */}
           <div className="p-4 bg-gray-700 rounded-lg text-center">
-            <h3 className="text-lg font-light text-white  underline mb-2">
+            <h3 className="text-lg font-light text-white underline mb-2">
               {dict.ResultDisplayChiromancy.full_analysis}
             </h3>
             <p className="text-sm text-white mb-4 font-light">
@@ -201,9 +252,12 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
             </p>
             <button
               onClick={handleProClick}
-              className="px-6 py-3 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all "
+              disabled={loading}
+              className="px-6 py-3 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white transition-all disabled:opacity-50"
             >
-              {dict.ResultDisplayChiromancy.full_analysis_button}
+              {loading
+                ? dict.ImageUpload.text1
+                : dict.ResultDisplayChiromancy.full_analysis_button}
             </button>
           </div>
         </div>
