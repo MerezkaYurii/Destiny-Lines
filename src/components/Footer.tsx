@@ -12,7 +12,7 @@ export default function Footer() {
   if (!dict) return null;
 
   return (
-    <footer className="w-full bg-gray-900/80 text-white py-4 shadow-sm transition-colors duration-500">
+    <footer className="fixed  bottom-0 left-0 z-50 w-full bg-gray-900/80 text-white py-4 shadow-sm transition-colors duration-500 ">
       <div className="container mx-auto px-4 flex flex-col items-center justify-center gap-4 text-sm text-center">
         <div>
           © {new Date().getFullYear()} {dict.footer.title} — {dict.footer.text}{' '}

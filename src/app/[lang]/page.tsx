@@ -13,7 +13,7 @@ export default async function Home({
   return (
     <main className="flex flex-col items-center relative ">
       <RulesModal dict={dict} />
-      <div className="container w-full max-w-7x bg-gray-800/60 mb-20 mt-6">
+      <div className="container w-full max-w-7x bg-gray-800/60 mb-30 mt-6">
         <HomePageButtons />;
       </div>
     </main>

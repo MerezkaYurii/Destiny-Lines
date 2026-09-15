@@ -14,7 +14,10 @@ export default async function NumerologyPage({
   return (
     <main className="flex flex-col items-center ">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 dark:hidden mb-16 mt-[70px]">
+        <div
+          className="absolute inset-0 dark:hidden mb-16"
+          style={{ marginTop: '70px' }}
+        >
           <Image
             src="/NumberBg.jpg"
             alt="Theme background"
@@ -31,7 +34,7 @@ export default async function NumerologyPage({
       >
         ← Back / Назад
       </Link>
-      <div className="container w-full max-w-7x bg-gray-800/60 mb-20 mt-6 z-10">
+      <div className="container w-full max-w-7x bg-gray-800/60 mb-30 mt-6 z-10">
         <NumerologyContent dict={dict} lang={lang} />
       </div>
     </main>

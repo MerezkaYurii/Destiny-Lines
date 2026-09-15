@@ -1,4 +1,3 @@
-import { getDictionary } from '@/app/lib/get-dictionary';
 import { TarotContent } from '@/components/TarotContent';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,12 +8,14 @@ export default async function TarotPage({
   params: Promise<{ lang: 'en' | 'ru' }>;
 }) {
   const { lang } = await params;
-  const dict = await getDictionary(lang);
 
   return (
     <main className="flex flex-col items-center ">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 dark:hidden mb-16 mt-[70px]">
+        <div
+          className="absolute inset-0 dark:hidden mb-16"
+          style={{ marginTop: '70px' }}
+        >
           <Image
             src="/TarotBg.jpg"
             alt="Theme background"
@@ -31,7 +32,7 @@ export default async function TarotPage({
       >
         ← Back / Назад
       </Link>
-      <div className="container w-full max-w-7x bg-gray-800/60 mb-20 mt-6 z-10">
+      <div className="container w-full max-w-7x bg-gray-800/60 mb-30 mt-6 z-10">
         <TarotContent lang={lang} />
       </div>
     </main>

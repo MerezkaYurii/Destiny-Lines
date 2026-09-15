@@ -2,7 +2,6 @@ import { getDictionary } from '@/app/lib/get-dictionary';
 
 import TarotContentFullResult from '@/components/TarotContentFullResult';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function TarotPage({
   params,
@@ -15,7 +14,10 @@ export default async function TarotPage({
   return (
     <main className="flex flex-col items-center ">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 dark:hidden mb-16 mt-[70px]">
+        <div
+          className="absolute inset-0 dark:hidden mb-16 "
+          style={{ marginTop: '70px' }}
+        >
           <Image
             src="/TarotBg.jpg"
             alt="Theme background"
