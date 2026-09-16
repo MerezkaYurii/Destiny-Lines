@@ -25,7 +25,7 @@ export default function ContactPage() {
             <h2 className="text-xl font-semibold mb-2 text-white">
               Project Name
             </h2>
-            <p>SmartyHub / Destiny Lines</p>
+            <p>CuriosityHub / Destiny Lines</p>
           </section>
 
           <section>
@@ -34,10 +34,10 @@ export default function ContactPage() {
             </h2>
             <p>
               <a
-                href="mailto:yuriimerezka@gmail.com"
+                href="mailto:curiosityhub.contact@gmail.com"
                 className="text-blue-400 underline hover:text-blue-300"
               >
-                yuriimerezka@gmail.com
+                curiosityhub.contact@gmail.com
               </a>
             </p>
           </section>

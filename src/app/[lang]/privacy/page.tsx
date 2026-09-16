@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         <h1 className="text-3xl font-bold mb-6 text-white">Privacy Policy</h1>
 
         <div className="space-y-6 text-base leading-relaxed">
-          <p>Your privacy is extremely important to us at SmartyHub.</p>
+          <p>Your privacy is extremely important to us at CuriosityHub.</p>
 
           <section>
             <h2 className="text-xl font-semibold mb-2 text-white">

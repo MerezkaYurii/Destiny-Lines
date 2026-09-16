@@ -45,10 +45,10 @@ export default function RefundPage() {
               but access/report was not delivered, please contact our support
               team at{' '}
               <a
-                href="mailto:yuriimerezka@gmail.com"
+                href="mailto:curiosityhub.contact@gmail.com"
                 className="text-blue-400 underline hover:text-blue-300"
               >
-                yuriimerezka@gmail.com
+                curiosityhub.contact@gmail.com
               </a>{' '}
               within 14 days with your transaction details. Verified technical
               issues will be refunded in full.

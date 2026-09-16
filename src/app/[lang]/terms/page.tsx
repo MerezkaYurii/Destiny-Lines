@@ -19,9 +19,9 @@ export default function TermsPage() {
 
         <div className="space-y-6 text-base leading-relaxed">
           <p>
-            Welcome to SmartyHub ecosystem (including Passion Alchemy, Destiny
-            Lines, and Style Aura). By using our websites, you agree to the
-            following terms:
+            Welcome to CuriosityHub ecosystem (including Passion Alchemy,
+            Destiny Lines, and Style Aura). By using our websites, you agree to
+            the following terms:
           </p>
 
           <section>
