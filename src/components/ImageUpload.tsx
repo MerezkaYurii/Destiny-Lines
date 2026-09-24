@@ -10,10 +10,11 @@ import {
   UploadedFile,
   useChiromancyStore,
 } from '@/app/store/useChiromancyStore';
-import { useRouter } from 'next/navigation';
+
 import GlobalLoader from './GlobalLoader';
 
 import { fileToBase64 } from '@/app/utils/fileHelpers';
+import { openGumroadCheckout } from '@/app/lib/openGumroad';
 
 export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   const { setUploadedFiles } = useChiromancyStore();
@@ -24,7 +25,15 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     rightHand: null,
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const currentLanguage = dict.header?.language || 'en';
+
+  const langMap: Record<string, string> = {
+    Русский: 'ru',
+    English: 'en',
+  };
+
+  const shortLang = langMap[currentLanguage] || currentLanguage.toLowerCase();
+  localStorage.setItem('app_lang', shortLang);
 
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -117,41 +126,6 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     setUploads((prev) => ({ ...prev, [type]: null }));
   };
 
-  // const handleProClick = async () => {
-  //   if (!uploads.leftHand || !uploads.rightHand) {
-  //     alert('Необходимы изображения обеих рук');
-  //     return;
-  //   }
-
-  //   setLoading(true);
-
-  //   try {
-  //     const leftBase64 = await fileToBase64(uploads.leftHand.file);
-  //     const rightBase64 = await fileToBase64(uploads.rightHand.file);
-
-  //     localStorage.setItem('chiromancy_left_hand', leftBase64);
-  //     localStorage.setItem('chiromancy_right_hand', rightBase64);
-
-  //     const priceId = getEnvVar('NEXT_PUBLIC_STRIPE_PRICE_CHIROMANCY');
-
-  //     if (!priceId) {
-  //       console.error('Stripe Price ID for Chiromancy is missing');
-  //       setLoading(false);
-  //       return;
-  //     }
-
-  //     await handleCheckout(
-  //       priceId,
-  //       currentLocale,
-  //       'chiromancyFullResult',
-  //       setLoading,
-  //     );
-  //   } catch (error) {
-  //     console.error('Ошибка подготовки изображений:', error);
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleProClick = async () => {
     if (!uploads.leftHand || !uploads.rightHand) {
       alert('Необходимы изображения обеих рук');
@@ -167,7 +141,8 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       localStorage.setItem('chiromancy_left_hand', leftBase64);
       localStorage.setItem('chiromancy_right_hand', rightBase64);
 
-      router.push(`/${currentLocale}/chiromancyFullResult`);
+      // router.push(`/${currentLocale}/chiromancyFullResult`);
+      openGumroadCheckout('chiromancy', currentLocale);
     } catch (error) {
       console.error('Ошибка подготовки изображений:', error);
       setLoading(false);

@@ -27,6 +27,13 @@ export default function NumerologyForm({
     const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     const currentLanguage = dict.header?.language || 'en';
 
+    const langMap: Record<string, string> = {
+      Русский: 'ru',
+      English: 'en',
+    };
+    const shortLang = langMap[currentLanguage] || currentLanguage.toLowerCase();
+    localStorage.setItem('app_lang', shortLang);
+
     const formData = new FormData();
     formData.append('firstName', firstName);
     formData.append('lastName', lastName);

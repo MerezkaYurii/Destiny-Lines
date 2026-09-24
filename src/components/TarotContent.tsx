@@ -11,6 +11,15 @@ import ResultDisplayTarot from './ResultDisplayTarot';
 
 export const TarotContent = ({ lang }: { lang: string }) => {
   const dict = useDictionary();
+  const currentLanguage = dict.header?.language || 'en';
+
+  const langMap: Record<string, string> = {
+    Русский: 'ru',
+    English: 'en',
+  };
+
+  const shortLang = langMap[currentLanguage] || currentLanguage.toLowerCase();
+  localStorage.setItem('app_lang', shortLang);
 
   const [report, setReport] = useState<TarotReport | null>(null);
   const handleResultUpdate = (report: TarotReport) => {

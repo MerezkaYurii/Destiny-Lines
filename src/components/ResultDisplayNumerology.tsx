@@ -1,6 +1,7 @@
 'use client';
 
 import { useDictionary } from '@/app/hooks/useDictionary';
+import { openGumroadCheckout } from '@/app/lib/openGumroad';
 
 import { NumerologyReport } from '@/app/types/numerology';
 
@@ -43,16 +44,8 @@ export default function ResultDisplay({ report, lang }: ResultProps) {
           </p>
           <button
             disabled={loading}
-            // onClick={() =>
-            //   handleCheckout(
-            //     getEnvVar('NEXT_PUBLIC_STRIPE_PRICE_NUMEROLOGY'),
-            //     lang,
-            //     'numerologyFullResult',
-            //     setLoading,
-            //   )
-            // }
             onClick={() => {
-              router.push(`/${lang}/numerologyFullResult`);
+              openGumroadCheckout('numerology', lang);
             }}
             className="px-6 py-3 bg-[#0f3995] border-[#0f3995] hover:bg-[#0f3995]/70 text-white font-light rounded-full shadow-xs hover:shadow-white"
           >

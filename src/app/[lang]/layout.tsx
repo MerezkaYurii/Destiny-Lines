@@ -9,6 +9,7 @@ import { RootLayoutProps } from '@/app/types/generalTypes';
 import Footer from '@/components/Footer';
 import { Toaster } from 'react-hot-toast';
 import Header from '@/components/Header';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Destiny Lines',
@@ -72,6 +73,8 @@ export default async function RootLayout({
             <Footer />
           </div>
         </DictionaryProvider>
+
+       <script src="https://gumroad.com/js/gumroad.js" async></script>
       </body>
     </html>
   );

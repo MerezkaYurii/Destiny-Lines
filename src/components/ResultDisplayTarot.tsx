@@ -1,6 +1,7 @@
 'use client';
 
 import { useDictionary } from '@/app/hooks/useDictionary';
+import { openGumroadCheckout } from '@/app/lib/openGumroad';
 
 import { useTarotStore } from '@/app/store/useTarotStore';
 import { TarotResultProps } from '@/app/types/tarot';
@@ -67,7 +68,9 @@ export default function ResultDisplayTarot({
       }
     }
 
-    router.push(`/${lang}/tarotFullResult`);
+    // router.push(`/${lang}/tarotFullResult`);
+
+    openGumroadCheckout('tarot', lang)
   };
 
   return (
