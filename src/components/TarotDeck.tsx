@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion'; // Установи: npm install framer-motion
 import { useDictionary } from '@/app/hooks/useDictionary';
 import { useTarotStore } from '@/app/store/useTarotStore';
-import GlobalLoader from './GlobalLoader';
 
 const translations = {
   ru: [

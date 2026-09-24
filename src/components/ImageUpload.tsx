@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import Image from 'next/image';
 
@@ -25,7 +25,7 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     rightHand: null,
   });
   const [loading, setLoading] = useState(false);
-  const currentLanguage = dict.header?.language || 'en';
+  const currentLanguage = dict?.header?.language || 'en';
 
   const langMap: Record<string, string> = {
     Русский: 'ru',
@@ -33,7 +33,13 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   };
 
   const shortLang = langMap[currentLanguage] || currentLanguage.toLowerCase();
-  localStorage.setItem('app_lang', shortLang);
+
+  // ✅ Записываем в localStorage только на стороне клиента
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('app_lang', shortLang);
+    }
+  }, [shortLang]);
 
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
@@ -42,7 +48,6 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
     const selectedFile = e.target.files?.[0];
 
     if (selectedFile) {
-      // Ограничение 5 МБ
       if (selectedFile.size > 5 * 1024 * 1024) {
         alert(dict.ImageUpload.alert1);
         return;
@@ -65,7 +70,6 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
   const handleUpload = async () => {
     if (!uploads.leftHand && !uploads.rightHand) return;
 
-    // Собираем массив существующих файлов
     const filesToSave: UploadedFile[] = [];
     if (uploads.leftHand) {
       filesToSave.push({
@@ -83,7 +87,6 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       });
     }
 
-    // Записываем в стор
     setUploadedFiles(filesToSave);
 
     if (filesToSave.length < 2) {
@@ -138,10 +141,11 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
       const leftBase64 = await fileToBase64(uploads.leftHand.file);
       const rightBase64 = await fileToBase64(uploads.rightHand.file);
 
-      localStorage.setItem('chiromancy_left_hand', leftBase64);
-      localStorage.setItem('chiromancy_right_hand', rightBase64);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('chiromancy_left_hand', leftBase64);
+        localStorage.setItem('chiromancy_right_hand', rightBase64);
+      }
 
-      // router.push(`/${currentLocale}/chiromancyFullResult`);
       openGumroadCheckout('chiromancy', currentLocale);
     } catch (error) {
       console.error('Ошибка подготовки изображений:', error);
@@ -202,14 +206,12 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
         {loading ? dict.ImageUpload.text1 : dict.ImageUpload.text2}
       </button>
 
-      {/* Блок бесплатного отчета — показываем, если данные пришли */}
       {analysisResult && (
         <div className="mt-8 p-6 bg-gray-900 rounded-xl shadow-md border-2 border-gray-500">
           <h2 className="text-2xl font-medium text-white italic underline mb-4">
             {dict.analysisResult.title}
           </h2>
 
-          {/* ТЕКСТ ОТВЕТА ОТ ИИ */}
           <div className="text-white font-light text-base leading-relaxed whitespace-pre-line mb-6 bug-fix-text">
             {analysisResult.text ||
               (typeof analysisResult === 'string'
@@ -217,7 +219,6 @@ export const ImageUpload = ({ currentLocale }: { currentLocale: string }) => {
                 : JSON.stringify(analysisResult))}
           </div>
 
-          {/* Секция продажи полного разбора */}
           <div className="p-4 bg-gray-700 rounded-lg text-center">
             <h3 className="text-lg font-light text-white underline mb-2">
               {dict.ResultDisplayChiromancy.full_analysis}
